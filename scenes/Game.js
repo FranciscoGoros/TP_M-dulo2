@@ -14,6 +14,9 @@ export default class Game extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", "public/assets/tilemap/map.json");
     this.load.image("tileset", "public/assets/Texturetile.png");
     this.load.image("star", "public/assets/star.png");
+    this.load.image("door", "public/assets/door.png");
+    this.load.image("ruby", "public/assets/ruby.png");
+    this.load.image("gold", "public/assets/gold.png");
     this.load.image("dude", "./public/assets/Personaje.png", {
     });
   }
@@ -41,14 +44,10 @@ export default class Game extends Phaser.Scene {
     platformLayer.setCollisionByExclusion([-1]);
     platformLayer.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.player, platformLayer);
-  
-    const debugGraphics = this.add.graphics().setAlpha(0.75);
-    platformLayer.renderDebug(debugGraphics, {
-      tileColor: null, // Color of non-colliding tiles
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
-    });
-
+    
+    this.ruby = this.physics.add.group();
+    this.door = this.physics.add.group();
+    this.gold = this.physics.add.group();
     this.stars = this.physics.add.group();
 
     objectsLayer.objects.forEach((objData) => {
@@ -62,6 +61,27 @@ export default class Game extends Phaser.Scene {
           star.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
           break;
         }
+
+        case "gold": {
+          // add gold to scene
+          const gold = this.gold.create(x, y, "gold");
+          console.log("oro agregado: ", x, y);
+          break;
+        }
+
+        case "ruby" : {
+
+          const ruby = this.ruby.create(x, y, "ruby");
+          console.log("ruby agregado: ", x, y);
+          break;
+
+        }
+
+        case "door": {
+          const door = this.door.create(x, y, "door");
+          console.log("Entrando: ", x, y);
+          break;
+        }
       }
     });
 
@@ -73,12 +93,40 @@ export default class Game extends Phaser.Scene {
       null,
       this
     );
+
+    // No entiendo por qué no puedo poner esto junto al otro collider pero ok
+
+    this.physics.add.collider(
+      this.player,
+      this.ruby,
+      this.collectruby,
+      null,
+      this
+    );
+
+
+    this.physics.add.collider(
+      this.player,
+      this.gold,
+      this.collectgold,
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
+      this.door,
+      this.enterdoor,
+      null,
+      this
+    );
+
     // add overlap between stars and platform layer
     this.physics.add.collider(this.stars, platformLayer);
-
-    this.scoreText = this.add.text(16, 16, `Puntos: ${this.score}`, {
+  
+    this.scoreText = this.add.text(16, 16, `Puntaje: ${this.score}`, {
       fontSize: "32px",
-      fill: "#000",
+      fill: "#ffffff",
     });
   }
 
@@ -89,11 +137,34 @@ export default class Game extends Phaser.Scene {
     }
   }
 
+  enterdoor(player, door) {
+    if (this.score >= 50) {
+      door.disableBody(true, true); 
+      console.log("Puede entrar");
+      this.scene.restart();
+    }
+  }
+
+  collectgold(player, gold) {
+    gold.disableBody(true, true);
+
+    this.score += 20;
+    this.scoreText.setText(`Puntaje: ${this.score}`);
+  }
+
+
+  collectruby(player, ruby) {
+    ruby.disableBody(true, true);
+    this.score += 30;
+    this.scoreText.setText(`Puntaje: ${this.score}`);
+  }
+
+
   collectStar(player, star) {
     star.disableBody(true, true);
 
     this.score += 10;
-    this.scoreText.setText(`Score: ${this.score}`);
+    this.scoreText.setText(`Puntaje: ${this.score}`);
 
     if (this.stars.countActive(true) === 0) {
       //  A new batch of stars to collect
