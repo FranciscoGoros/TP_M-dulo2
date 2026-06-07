@@ -1,4 +1,5 @@
 import Game from "./scenes/Game.js";
+import Level2 from "./scenes/Level2.js";
 
 // Create a new Phaser config object
 const config = {
@@ -23,7 +24,7 @@ const config = {
     },
   },
 
-  scene: [Game],
+  scene: [Game, Level2],
 };
 
 window.game = new Phaser.Game(config);

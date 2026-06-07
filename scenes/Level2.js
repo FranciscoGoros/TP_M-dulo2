@@ -4,17 +4,17 @@ import { Interfaz } from "./Interfaz.js";
 
 const Phaser = window.Phaser;
 
-export default class Game extends Phaser.Scene {
+export default class Level2 extends Phaser.Scene {
   constructor() {
-    super("game");
+    super("Level2");
   }
 
   init() {
-    this.score = 0;
+    this.score = this.registry.get('score') || 0;
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map", "public/assets/tilemap/map.json");
+    this.load.tilemapTiledJSON("map2", "public/assets/tilemap/map2.json");
     this.load.image("tileset", "public/assets/Texturetile.png");
     this.load.image("star", "public/assets/star.png");
     this.load.image("door", "public/assets/door.png");
@@ -25,7 +25,7 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    const map = this.make.tilemap({ key: "map" });
+    const map = this.make.tilemap({ key: "map2" });
     const tileset = map.addTilesetImage("Texturetile", "tileset");
 
     const belowLayer = map.createLayer("Fondo", tileset, 0, 0);
@@ -134,7 +134,6 @@ export default class Game extends Phaser.Scene {
   enterdoor(player, door) {
     if (this.inventario.items.length >= 5) {
       door.disableBody(true, true); 
-      this.registry.set('score', this.score);
       this.scene.start("Level2");
     }
   }
