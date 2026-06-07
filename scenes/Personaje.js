@@ -1,6 +1,7 @@
 const Phaser = window.Phaser;
 export default class Personaje extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture) {
+
         super(scene, x, y, texture);
         this.setScale(1, 1);
         scene.add.existing(this);
@@ -10,6 +11,10 @@ export default class Personaje extends Phaser.Physics.Arcade.Sprite {
         this.vida = 1;
         this.velocidad = 100;
 
+        this.inventario = [];
+
+        console.log(this.inventario);
+        
         this.teclas = scene.input.keyboard.createCursorKeys();
     }
 
