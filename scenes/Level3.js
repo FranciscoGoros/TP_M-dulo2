@@ -4,9 +4,9 @@ import { Interfaz } from "./Interfaz.js";
 
 const Phaser = window.Phaser;
 
-export default class Level2 extends Phaser.Scene {
+export default class Level3 extends Phaser.Scene {
   constructor() {
-    super("Level2");
+    super("Level3");
   }
 
   init() {
@@ -14,7 +14,7 @@ export default class Level2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON("map2", "public/assets/tilemap/map2.json");
+    this.load.tilemapTiledJSON("map3", "public/assets/tilemap/map3.json");
     this.load.image("tileset", "public/assets/Texturetile.png");
     this.load.image("star", "public/assets/star.png");
     this.load.image("door", "public/assets/door.png");
@@ -25,7 +25,10 @@ export default class Level2 extends Phaser.Scene {
   }
 
   create() {
-    const map = this.make.tilemap({ key: "map2" });
+    const map = this.make.tilemap({ key: "map3" });
+
+    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
     const tileset = map.addTilesetImage("Texturetile", "tileset");
 
     const belowLayer = map.createLayer("Fondo", tileset, 0, 0);
@@ -55,6 +58,8 @@ export default class Level2 extends Phaser.Scene {
     this.door = this.physics.add.group();
     this.gold = this.physics.add.group();
     this.stars = this.physics.add.group();
+
+    this.cameras.main.startFollow(this.player);
 
     objectsLayer.objects.forEach((objData) => {
       console.log(objData);
@@ -134,7 +139,7 @@ export default class Level2 extends Phaser.Scene {
   enterdoor(player, door) {
     if (this.inventario.items.length >= 5) {
       door.disableBody(true, true); 
-      this.scene.start("Level3");
+      this.scene.start("Game");
     }
   }
 

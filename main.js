@@ -1,6 +1,6 @@
 import Game from "./scenes/Game.js";
 import Level2 from "./scenes/Level2.js";
-
+import Level3 from "./scenes/Level3.js";
 // Create a new Phaser config object
 const config = {
   type: Phaser.AUTO,
@@ -24,7 +24,7 @@ const config = {
     },
   },
 
-  scene: [Game, Level2],
+  scene: [Game, Level2, Level3],
 };
 
 window.game = new Phaser.Game(config);
