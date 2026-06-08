@@ -4,7 +4,7 @@ import inventario from "./Inventario.js";
 export function Interfaz(scene) {
 
 
-    scene.Puntos = scene.add.text(16, 16, `Puntaje: ${scene.score}`, {
+    scene.Puntos = scene.add.text(16, 16, `Puntos: ${scene.score}`, {
         fontSize: "24px",
         fontFamily: "sans-serif",
         fill: "#fffb00",

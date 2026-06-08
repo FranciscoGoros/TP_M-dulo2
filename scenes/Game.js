@@ -1,6 +1,7 @@
 import Personaje from "./Personaje.js";
 import inventario from "./Inventario.js";
 import { Interfaz } from "./Interfaz.js";
+import Enemigo from "./Enemigo.js";
 
 const Phaser = window.Phaser;
 
@@ -22,12 +23,14 @@ export default class Game extends Phaser.Scene {
     this.load.image("gold", "public/assets/gold.png");
     this.load.image("dude", "./public/assets/Personaje.png", {
     });
+    this.load.image("enemy", "./public/assets/Enemigo.png", {
+    });
   }
 
   create() {
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("Texturetile", "tileset");
-
+  
     const belowLayer = map.createLayer("Fondo", tileset, 0, 0);
     const platformLayer = map.createLayer("Plataformas", tileset, 0, 0);
     const objectsLayer = map.getObjectLayer("Objetos");
@@ -44,6 +47,7 @@ export default class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     this.inventario = new inventario();
+    this.enemigosGroup = this.physics.add.group();
 
     Interfaz(this);
 
@@ -55,6 +59,9 @@ export default class Game extends Phaser.Scene {
     this.door = this.physics.add.group();
     this.gold = this.physics.add.group();
     this.stars = this.physics.add.group();
+    this.enemigosGroup = this.physics.add.group();
+
+
 
     objectsLayer.objects.forEach((objData) => {
       console.log(objData);
@@ -71,6 +78,15 @@ export default class Game extends Phaser.Scene {
           const gold = this.gold.create(x, y, "gold");
           break;
         }
+        
+        case "enemy" : {
+        
+          const enemigonuevo = new Enemigo(this, x, y, "enemy");
+          this.enemigosGroup.add(enemigonuevo);
+          break;
+        }
+
+
 
         case "ruby" : {
 
@@ -85,6 +101,16 @@ export default class Game extends Phaser.Scene {
         }
       }
     });
+
+    this.physics.add.collider(
+      this.player,
+      this.enemigosGroup,
+      this.enemycollide,
+      null,
+      this
+    );
+
+
 
     // add collision between player and stars
     this.physics.add.overlap(
@@ -127,7 +153,6 @@ export default class Game extends Phaser.Scene {
   update() {
     if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
       console.log("Phaser.Input.Keyboard.JustDown(this.keyR)");
-      this.scene.restart();
     }
   }
 
@@ -173,5 +198,10 @@ export default class Game extends Phaser.Scene {
         child.enableBody(true, child.x, 0, true, true);
       });
     }
+  }
+
+  enemycollide(player, enemigo) {
+    this.player.vida -= 1;
+    enemigo.disableBody(true, true);
   }
 }

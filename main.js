@@ -1,6 +1,8 @@
 import Game from "./scenes/Game.js";
 import Level2 from "./scenes/Level2.js";
 import Level3 from "./scenes/Level3.js";
+import Menu from "./scenes/Menu.js";
+
 // Create a new Phaser config object
 const config = {
   type: Phaser.AUTO,
@@ -20,11 +22,11 @@ const config = {
     default: "arcade",
     arcade: {
       gravity: {y: 0},
-      debug: true,
+      debug: false,
     },
   },
 
-  scene: [Game, Level2, Level3],
+  scene: [Menu, Game, Level2, Level3],
 };
 
 window.game = new Phaser.Game(config);
