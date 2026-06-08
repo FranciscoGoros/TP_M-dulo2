@@ -40,5 +40,11 @@ export default class Personaje extends Phaser.Physics.Arcade.Sprite {
         else { 
             this.setVelocityY(0);
         }
+
+
+        if (this.vida <= 0 && !this.isDead) {
+            this.isDead = true;
+            this.scene.scene.restart();
+        }
     }
 }

@@ -1,6 +1,7 @@
 import Personaje from "./Personaje.js";
 import inventario from "./Inventario.js";
 import { Interfaz } from "./Interfaz.js";
+import Enemigo from "./Enemigo.js";
 
 const Phaser = window.Phaser;
 
@@ -21,6 +22,8 @@ export default class Level3 extends Phaser.Scene {
     this.load.image("ruby", "public/assets/ruby.png");
     this.load.image("gold", "public/assets/gold.png");
     this.load.image("dude", "./public/assets/Personaje.png", {
+    });
+    this.load.image("enemy", "./public/assets/Enemigo.png", {
     });
   }
 
@@ -58,6 +61,7 @@ export default class Level3 extends Phaser.Scene {
     this.door = this.physics.add.group();
     this.gold = this.physics.add.group();
     this.stars = this.physics.add.group();
+    this.enemigosGroup = this.physics.add.group();
 
     this.cameras.main.startFollow(this.player);
 
@@ -83,6 +87,15 @@ export default class Level3 extends Phaser.Scene {
           break;
 
         }
+
+        case "enemy" : {
+
+          const enemigonuevo = new Enemigo(this, x, y, "enemy");
+
+          this.enemigosGroup.add(enemigonuevo);
+          break;
+        }
+
 
         case "door": {
           const door = this.door.create(x, y, "door");
@@ -127,6 +140,14 @@ export default class Level3 extends Phaser.Scene {
       this
     );
 
+    this.physics.add.collider(
+      this.player,
+      this.enemigosGroup,
+      this.enemycollide,
+      null,
+      this
+    );
+
   }
 
   update() {
@@ -139,7 +160,7 @@ export default class Level3 extends Phaser.Scene {
   enterdoor(player, door) {
     if (this.inventario.items.length >= 5) {
       door.disableBody(true, true); 
-      this.scene.start("Game");
+      this.scene.start("Menu");
     }
   }
 
@@ -178,4 +199,9 @@ export default class Level3 extends Phaser.Scene {
       });
     }
   }
+  enemycollide(player, enemigo) {
+    this.player.vida -= 1;
+    enemigo.disableBody(true, true);
+  }
+
 }

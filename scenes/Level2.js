@@ -1,6 +1,7 @@
 import Personaje from "./Personaje.js";
 import inventario from "./Inventario.js";
 import { Interfaz } from "./Interfaz.js";
+import Enemigo from "./Enemigo.js";
 
 const Phaser = window.Phaser;
 
@@ -21,6 +22,8 @@ export default class Level2 extends Phaser.Scene {
     this.load.image("ruby", "public/assets/ruby.png");
     this.load.image("gold", "public/assets/gold.png");
     this.load.image("dude", "./public/assets/Personaje.png", {
+    });
+    this.load.image("enemy", "./public/assets/Enemigo.png", {
     });
   }
 
@@ -55,6 +58,7 @@ export default class Level2 extends Phaser.Scene {
     this.door = this.physics.add.group();
     this.gold = this.physics.add.group();
     this.stars = this.physics.add.group();
+    this.enemigosGroup = this.physics.add.group();
 
     objectsLayer.objects.forEach((objData) => {
       console.log(objData);
@@ -79,10 +83,19 @@ export default class Level2 extends Phaser.Scene {
 
         }
 
+        case "enemy" : {
+
+          const enemigonuevo = new Enemigo(this, x, y, "enemy");
+
+          this.enemigosGroup.add(enemigonuevo);
+          break;
+        }
+
         case "door": {
           const door = this.door.create(x, y, "door");
           break;
         }
+        
       }
     });
 
@@ -122,7 +135,18 @@ export default class Level2 extends Phaser.Scene {
       this
     );
 
+
+    this.physics.add.collider(
+      this.player,
+      this.enemigosGroup,
+      this.enemycollide,
+      null,
+      this
+    );
+
+
   }
+
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
@@ -134,6 +158,7 @@ export default class Level2 extends Phaser.Scene {
   enterdoor(player, door) {
     if (this.inventario.items.length >= 5) {
       door.disableBody(true, true); 
+      this.registry.set('score', this.score);
       this.scene.start("Level3");
     }
   }
@@ -173,4 +198,13 @@ export default class Level2 extends Phaser.Scene {
       });
     }
   }
+
+  enemycollide(player, enemigo) {
+    this.player.vida -= 1;
+    enemigo.disableBody(true, true);
+  }
+
+
+
+
 }
