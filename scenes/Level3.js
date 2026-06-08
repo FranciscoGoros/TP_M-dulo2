@@ -160,7 +160,7 @@ export default class Level3 extends Phaser.Scene {
   enterdoor(player, door) {
     if (this.inventario.items.length >= 5) {
       door.disableBody(true, true); 
-      this.scene.start("Menu");
+      this.scene.start("End");
     }
   }
 
