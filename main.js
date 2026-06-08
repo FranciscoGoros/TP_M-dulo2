@@ -2,6 +2,7 @@ import Game from "./scenes/Game.js";
 import Level2 from "./scenes/Level2.js";
 import Level3 from "./scenes/Level3.js";
 import Menu from "./scenes/Menu.js";
+import End from "./scenes/End.js";
 
 // Create a new Phaser config object
 const config = {
@@ -26,7 +27,7 @@ const config = {
     },
   },
 
-  scene: [Menu, Game, Level2, Level3],
+  scene: [Menu, Game, Level2, Level3, End],
 };
 
 window.game = new Phaser.Game(config);
